@@ -1,6 +1,5 @@
-const ASSET = 'https://ecobuilding.msa-clientes.com/wp-content/uploads/'
 const brands = ['Caldaia', 'Carrier', 'Baxi', 'Surrey', 'Peisa', 'Ariston']
-const brandImages = brands.map((brand) => `${ASSET}2025/04/Ecobuilding-Logo-${brand}-gris-300x240.png`)
+const brandImages = brands.map((brand) => `assets/brands/logo-${brand.toLowerCase()}.png`)
 
 // Shrink header on scroll
 const topbar = document.querySelector('.topbar')
@@ -50,14 +49,43 @@ const io = new IntersectionObserver((entries) => {
 }, { threshold: .2 })
 document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el))
 
-// Brands marquee (duplicated track for a seamless loop)
-const brandHtml = brands.map((brand, i) => `<div class="brand-item"><img src="${brandImages[i]}" alt="${brand}" /></div>`).join('')
-document.getElementById('brand-track').innerHTML = brandHtml
-document.getElementById('brand-track-2').innerHTML = brandHtml
+// Brands marquee (duplicated track for a seamless loop) — only present on the homepage
+const brandTrack = document.getElementById('brand-track')
+if (brandTrack) {
+  const brandHtml = brands.map((brand, i) => `<div class="brand-item"><img src="${brandImages[i]}" alt="${brand}" /></div>`).join('')
+  brandTrack.innerHTML = brandHtml
+  document.getElementById('brand-track-2').innerHTML = brandHtml
+}
 
-// Contact form: opens the visitor's email client (mailto)
+// Blog listing filters (category pills + search) — only present on blog/index.html
+const blogGrid = document.getElementById('blogGrid')
+if (blogGrid) {
+  const cards = Array.from(blogGrid.querySelectorAll('.bcard'))
+  const catBar = document.getElementById('catBar')
+  const searchInput = document.getElementById('blogSearch')
+  let activeCat = 'all'
+  const applyFilters = () => {
+    const q = searchInput.value.trim().toLowerCase()
+    cards.forEach((card) => {
+      const matchesCat = activeCat === 'all' || card.dataset.cat === activeCat
+      const matchesSearch = !q || card.textContent.toLowerCase().includes(q)
+      card.style.display = matchesCat && matchesSearch ? '' : 'none'
+    })
+  }
+  catBar.addEventListener('click', (e) => {
+    const btn = e.target.closest('.blog-cat-btn')
+    if (!btn) return
+    catBar.querySelector('.active')?.classList.remove('active')
+    btn.classList.add('active')
+    activeCat = btn.dataset.cat
+    applyFilters()
+  })
+  searchInput.addEventListener('input', applyFilters)
+}
+
+// Contact form: opens the visitor's email client (mailto) — only present on the homepage
 // ponytail: swap for a fetch() to the Resend API once the endpoint is ready
-document.getElementById('contact-form').addEventListener('submit', (e) => {
+document.getElementById('contact-form')?.addEventListener('submit', (e) => {
   e.preventDefault()
   const form = e.target
   const { type, name, email, phone, message } = Object.fromEntries(new FormData(form))
