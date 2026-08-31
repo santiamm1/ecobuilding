@@ -71,7 +71,7 @@ h1 span { color: var(--lime); }
 .hero-proof p { margin: 0 0 0 auto; color: var(--ink); font: 600 14px 'Inter'; max-width: 230px; text-align: right; line-height: 1.45; }
 .hero-note { position: absolute; bottom: 28px; left: 5.5vw; font-size: 11px; color: var(--ink); text-transform: uppercase; letter-spacing: .12em; }
 .hero-note span { color: var(--lime); margin-right: 10px; }
-.services-section { padding: 125px var(--content-gutter) 135px; max-width: none; width: 100%; margin: auto; background: #fff; }
+.services-section { padding: 125px var(--content-gutter) 135px; max-width: none; width: 100%; margin: auto; background: var(--pale); }
 .services-section > * { max-width: var(--content-max); margin-left: auto; margin-right: auto; }
 .section-intro { max-width: 640px; padding-top: 0; margin: 0 auto 52px 0; }
 .section-label { text-transform: uppercase; letter-spacing: .16em; font-size: 12px; font-weight: 700; color: var(--lime); margin: 0 0 18px; }
@@ -114,7 +114,7 @@ h2 em { color: var(--lime); font-style: normal; }
 ul { padding: 0; margin: 0; list-style: none; }
 li { font-size: 13px; color: var(--muted); line-height: 1.5; margin: 5px 0; padding-left: 16px; position: relative; }
 li::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--lime); position: absolute; left: 0; top: 8px; }
-.company-section { background: var(--pale); padding: 115px var(--content-gutter); display: grid; grid-template-columns: 1fr 1fr; gap: min(10vw, 130px); align-items: center; }
+.company-section { background: #fff; padding: 115px var(--content-gutter); display: grid; grid-template-columns: 1fr 1fr; gap: min(10vw, 130px); align-items: center; }
 .photo-stack { height: 480px; position: relative; }
 .photo-large, .photo-small { background-position: center; background-size: cover; position: absolute; border-radius: var(--radius); }
 .photo-large { inset: 0 14% 12% 0; }
