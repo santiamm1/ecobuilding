@@ -83,13 +83,28 @@ if (blogGrid) {
   searchInput.addEventListener('input', applyFilters)
 }
 
-// Contact form: opens the visitor's email client (mailto) — only present on the homepage
-// ponytail: swap for a fetch() to the Resend API once the endpoint is ready
-document.getElementById('contact-form')?.addEventListener('submit', (e) => {
+// Contact form: submits to contact.php (PHP mail() on the cPanel host) — only present on the homepage
+document.getElementById('contact-form')?.addEventListener('submit', async (e) => {
   e.preventDefault()
   const form = e.target
-  const { type, name, email, phone, message } = Object.fromEntries(new FormData(form))
-  const subject = `Consulta de ${name} — sitio web Ecobuilding`
-  const body = `Tipo: ${type}\nNombre: ${name}\nEmail: ${email}\nTeléfono: ${phone || '-'}\n\n${message}`
-  window.location.href = `mailto:info@ecobuilding.com.ar?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+  const submitBtn = form.querySelector('button[type="submit"]')
+  const originalLabel = submitBtn.innerHTML
+  submitBtn.disabled = true
+  submitBtn.innerHTML = 'Enviando…'
+
+  try {
+    const res = await fetch('contact.php', { method: 'POST', body: new FormData(form) })
+    const data = await res.json()
+    if (!res.ok || !data.ok) throw new Error(data.error || 'send_failed')
+    form.reset()
+    submitBtn.innerHTML = '¡Enviado! Te contactamos pronto'
+  } catch (err) {
+    const { type, name, email, phone, message } = Object.fromEntries(new FormData(form))
+    const subject = `Consulta de ${name} — sitio web Ecobuilding`
+    const body = `Tipo: ${type}\nNombre: ${name}\nEmail: ${email}\nTeléfono: ${phone || '-'}\n\n${message}`
+    window.location.href = `mailto:info@ecobuilding.com.ar?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+    submitBtn.innerHTML = originalLabel
+  } finally {
+    submitBtn.disabled = false
+  }
 })
