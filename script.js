@@ -83,6 +83,33 @@ if (blogGrid) {
   searchInput.addEventListener('input', applyFilters)
 }
 
+// Home blog section: always the latest 3 notes, read from blog/index.html (newest first) — only present on the homepage
+const homeBlogGrid = document.querySelector('#blog .blog-grid')
+if (homeBlogGrid) {
+  fetch('blog/index.html')
+    .then((res) => res.text())
+    .then((html) => {
+      const doc = new DOMParser().parseFromString(html, 'text/html')
+      const latest = Array.from(doc.querySelectorAll('#blogGrid .bcard')).slice(0, 3)
+      if (latest.length === 0) return
+      const arrow = homeBlogGrid.querySelector('.blog-link svg')?.outerHTML || ''
+      homeBlogGrid.innerHTML = latest.map((card) => {
+        const img = card.querySelector('.bcard-img img')
+        const tag = card.querySelector('.bcard-cat').textContent
+        return `<article class="blog-card reveal is-visible">
+          <div class="blog-media"><span class="blog-tag">${tag}</span><img src="${img.getAttribute('src').replace('../', '')}" alt="${img.alt}" loading="lazy" /></div>
+          <div class="blog-body">
+            <span class="blog-meta">${tag} · ${card.querySelector('.bcard-read').textContent} de lectura</span>
+            <h3>${card.querySelector('.bcard-title').textContent}</h3>
+            <p>${card.querySelector('.bcard-excerpt').textContent}</p>
+            <a class="blog-link" href="blog/${card.getAttribute('href')}">Leer nota ${arrow}</a>
+          </div>
+        </article>`
+      }).join('')
+    })
+    .catch(() => {}) // ponytail: keep the static cards in index.html as fallback
+}
+
 // Contact form: submits to contact.php (PHP mail() on the cPanel host) — only present on the homepage
 document.getElementById('contact-form')?.addEventListener('submit', async (e) => {
   e.preventDefault()
