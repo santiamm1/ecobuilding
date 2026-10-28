@@ -57,7 +57,7 @@ if (brandTrack) {
   document.getElementById('brand-track-2').innerHTML = brandHtml
 }
 
-// Blog listing filters (category pills + search) — only present on blog/index.html
+// Blog listing filters (category pills + search) — only present on the blog listing
 const blogGrid = document.getElementById('blogGrid')
 if (blogGrid) {
   const cards = Array.from(blogGrid.querySelectorAll('.bcard'))
@@ -83,10 +83,10 @@ if (blogGrid) {
   searchInput.addEventListener('input', applyFilters)
 }
 
-// Home blog section: always the latest 3 notes, read from blog/index.html (newest first) — only present on the homepage
+// Home blog section: always the latest 3 notes, read from the blog listing (newest first) — only present on the homepage
 const homeBlogGrid = document.querySelector('#blog .blog-grid')
 if (homeBlogGrid) {
-  fetch('blog/index.html')
+  fetch('blog/')
     .then((res) => res.text())
     .then((html) => {
       const doc = new DOMParser().parseFromString(html, 'text/html')
